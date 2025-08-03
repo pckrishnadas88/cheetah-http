@@ -35,8 +35,8 @@ class CheetahServer {
   enableLayer(name, options = {}) {
     const layers = {
       json: require('./layers/jsonParser.js'),
-      urlencoded: require('./layers/urlencoded.js')
-      // jwt: require('./layers/jwt'),
+      urlencoded: require('./layers/urlencoded.js'),
+      jwt: require('./layers/jwt'),
       // rps: require('./layers/rps'),
       // static: require('./layers/static')
     };

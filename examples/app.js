@@ -5,6 +5,7 @@ const app = new CheetahServer();
 
 app.enableLayer('json', { limit: 1024 * 100 }); // 100KB max
 app.enableLayer('urlencoded', { limit: 1024 * 100 }); // 100 KB
+app.enableLayer('jwt', { secret: 'super-secret-key' });
 
 
 app.use((req, res, next) => {
@@ -36,7 +37,14 @@ app.post('/api', (req, res) => {
 app.post('/form', (req, res) => {
   res.status(201).json({ data: req.body });
 });
+//jwt test
+app.get('/profile', (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
 
+  res.json({ user: req.user });
+});
 const cluster = true
 app.listen(3000, { cluster: cluster }, () => {
  // console.log("server started")
