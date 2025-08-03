@@ -6,7 +6,7 @@ const os = require('os');
 
 class CheetahServer {
   constructor() {
-    this.routes = { GET: [], POST: [] };
+    this.routes = { GET: [], POST: [], PATCH: [], PUT: [] };
     this.middlewares = [];
     this.port = null;
     this.options = {};
@@ -23,6 +23,28 @@ class CheetahServer {
 
   post(path, handler) {
     this.routes.POST.push({ path, handler });
+  }
+
+  put(path, handler) {
+    this.routes.POST.push({ path, handler });
+  }
+
+  patch(path, handler) {
+    this.routes.POST.push({ path, handler });
+  }
+  enableLayer(name, options = {}) {
+    const layers = {
+      json: require('./layers/jsonParser.js'),
+      // jwt: require('./layers/jwt'),
+      // rps: require('./layers/rps'),
+      // static: require('./layers/static')
+    };
+
+    if (layers[name]) {
+      this.use(layers[name](options));
+    } else {
+      throw new Error(`Unknown layer: ${name}`);
+    }
   }
 
   findRoute(method, pathname, req) {
