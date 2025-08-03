@@ -4,10 +4,11 @@ const app = new CheetahServer();
 
 
 app.enableLayer('json', { limit: 1024 * 100 }); // 100KB max
+app.enableLayer('urlencoded');
 
 
 app.use((req, res, next) => {
-  console.log(`[${process.pid}] ${req.method} ${req.url}`);
+  //console.log(`[${process.pid}] ${req.method} ${req.url}`);
   next();
 });
 
@@ -30,6 +31,10 @@ app.patch('/patch', (req, res) => {
 
 app.post('/api', (req, res) => {
   res.json({ hello: req.body?.name || 'world' });
+});
+//url encoded
+app.post('/form', (req, res) => {
+  res.json({ data: req.body });
 });
 
 const cluster = true
