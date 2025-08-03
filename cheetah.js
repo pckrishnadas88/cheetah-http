@@ -105,6 +105,10 @@ class CheetahServer {
       res.setHeader('Content-Length', Buffer.byteLength(body));
       res.end(body);
     };
+    res.status = function (code) {
+      res.statusCode = code;
+      return res;
+    };
 
     // ✅ Fix: preserve outer this context
     this.handle(req, res);

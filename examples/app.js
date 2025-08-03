@@ -4,7 +4,7 @@ const app = new CheetahServer();
 
 
 app.enableLayer('json', { limit: 1024 * 100 }); // 100KB max
-app.enableLayer('urlencoded');
+app.enableLayer('urlencoded', { limit: 1024 * 100 }); // 100 KB
 
 
 app.use((req, res, next) => {
@@ -34,7 +34,7 @@ app.post('/api', (req, res) => {
 });
 //url encoded
 app.post('/form', (req, res) => {
-  res.json({ data: req.body });
+  res.status(201).json({ data: req.body });
 });
 
 const cluster = true
