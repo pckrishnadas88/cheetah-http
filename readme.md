@@ -8,9 +8,7 @@ It’s built to be minimal and modular, with **zero dependencies** by default an
 
 ---
 
-## 🚀 Why Cheetah?
-
-### Philosophy
+## ✨ Philosophy
 
 Cheetah will always be:
 
@@ -20,11 +18,11 @@ Cheetah will always be:
 
 * **Modular by design** — add features via optional layers only when needed
 
-* ⚡ **Fast** — 180k+ req/sec without any middleware
+* ⚡ **Fast** — 63k+ req/sec
 
 * 🧱 **Tiny** — no external deps, no hidden work
 
-* 🧹 **Modular** — add only the features you need
+* 🚹 **Modular** — add only the features you need
 
 * 🔬 **Benchmark-friendly** — ideal for head-to-head comparisons
 
@@ -44,8 +42,9 @@ npm install ./cheetah
 Or if using `require()` directly:
 
 ```js
-const cheetah = require('./cheetah');
-const app = cheetah();
+const { CheetahServer } = require('../cheetah');
+const app = new CheetahServer();
+
 ```
 
 ---
@@ -53,8 +52,8 @@ const app = cheetah();
 ## ✨ Quick Start
 
 ```js
-const cheetah = require('./cheetah');
-const app = cheetah();
+const { CheetahServer } = require('../cheetah');
+const app = new CheetahServer();
 
 app.get('/', (req, res) => {
   res.json({ msg: 'Hello from Cheetah!' });
@@ -91,51 +90,33 @@ app.enableLayer('jwt', { secret: 'super-secret' });
 
 ---
 
-## 🧪 Performance (M1, local)
+## 🧪 Performance Benchmarks
 
-### Framework Benchmark Comparison
+### No Clustering (Dell Vostro i5, 100 connections)
 
-| Framework   | Avg Req/sec | Notes                       |
-| ----------- | ----------- | --------------------------- |
-| **Cheetah** | \~179,000   | Local benchmark (no layers) |
-| Fastify     | \~45,281    | Official Fastify benchmark  |
-| Koa         | \~34,214    | Fastify chart comparison    |
-| Restify     | \~34,958    | From Fastify benchmarks     |
-| Hapi        | \~31,852    | Same source                 |
-| Express     | \~10,278    | Fastify vs others           |
+| Framework   | Avg Req/sec | Latency (avg) | Notes                  |
+| ----------- | ----------- | ------------- | ---------------------- |
+| **Cheetah** | **63,179**  | **1.13 ms**   | Minimal core `/` route |
+| Fastify     | 53,013      | 1.33 ms       | Same route `/`         |
+| Express     | 9,970       | 9.51 ms       | Minimal route handler  |
 
-> All non‑Cheetah results are from the official Fastify benchmarks ([https://fastify.dev/benchmarks](https://fastify.dev/benchmarks)). Cheetah’s benchmark measured locally on Apple M1 using `autocannon -c 100 -d 30 -p 10`.
+> Benchmarked using:
+> `autocannon -c 100 -d 10 http://localhost:3000/`
 
-```bash
-autocannon -c 100 -d 30 -p 10 http://localhost:3000/
-```
+### With Clustering (Dell Vostro i5, 100 connections)
 
-> \~180,000 requests/sec (no layers)
+| Framework   | Avg Req/sec | Latency (avg) | Notes                |
+| ----------- | ----------- | ------------- | -------------------- |
+| **Cheetah** | **42,372**  | **1.87 ms**   | Cluster mode enabled |
 
-### Sample Output:
+> `autocannon -c 100 -d 10 http://localhost:3000/`
 
-```
-Running 30s test @ http://localhost:3000/
-100 connections with 10 pipelining factor
+### 📉 Why Lower with Clustering?
 
-📊 Latency:
-┌─────────┌──────┌──────┌───────┌───────┌─────────┌─────────┌───────┐
-│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%   │ Avg     │ Stdev   │ Max   │
-├─────────┼──────┼──────┼───────┼───────┼─────────┼─────────┼───────┤
-│ Latency │ 4 ms │ 5 ms │ 10 ms │ 10 ms │ 5.26 ms │ 1.76 ms │ 95 ms │
-└─────────┴──────┴──────┴───────┴───────┴─────────┴─────────┴───────┘
-
-📊 Throughput:
-┌───────────┌─────────┌─────────┌─────────┌─────────┌─────────┌───────────┌─────────┐
-│ Stat      │ 1%      │ 2.5%    │ 50%     │ 97.5%   │ Avg     │ Stdev     │ Min     │
-├───────────┼─────────┼─────────┼─────────┼─────────┼─────────┼───────────┼─────────┤
-│ Req/Sec   │ 115,903 │ 115,903 │ 183,935 │ 185,983 │ 179,088 │ 15,031.98 │ 115,881 │
-├───────────┼─────────┼─────────┼─────────┼─────────┼─────────┼───────────┼─────────┤
-│ Bytes/Sec │ 17 MB   │ 17 MB   │ 27 MB   │ 27.3 MB │ 26.3 MB │ 2.21 MB   │ 17 MB   │
-└───────────┴─────────┴─────────┴─────────┴─────────┴─────────┴───────────┴─────────┘
-
-5374k requests in 30.08s, 790 MB read
-```
+* Your machine likely has limited cores (e.g., 4), which limits parallelism
+* IPC (inter-process communication) adds overhead
+* If load balancing is uneven, some workers are underutilized
+* For very fast handlers, clustering may **not** improve performance — can even slow it slightly
 
 ---
 
@@ -163,7 +144,7 @@ cheetah/
 | JSON parser            | ✅ Done         |
 | JWT                    | ✅ Done         |
 | URL-encoded            | ✅ Done         |
-| CORS/static/rate limit | 🚧 In progress |
+| CORS/static/rate limit | ⚠️ In progress |
 | TypeScript types       | ❌ Not yet      |
 | CLI                    | ❌ Not yet      |
 | NPM publish            | ❌ Not yet      |
@@ -173,4 +154,4 @@ cheetah/
 ## 🧠 License & Credits
 
 MIT License
-Made by \[Krishnadas] for experiments and speed ❤️
+Made by Krishnadas for experiments and speed ❤️
