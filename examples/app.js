@@ -3,9 +3,9 @@ const { CheetahServer } = require('../cheetah');
 const app = new CheetahServer();
 
 
-app.enableLayer('json', { limit: 1024 * 100 }); // 100KB max
-app.enableLayer('urlencoded', { limit: 1024 * 100 }); // 100 KB
-app.enableLayer('jwt', { secret: 'super-secret-key' });
+// app.enableLayer('json', { limit: 1024 * 100 }); // 100KB max
+// app.enableLayer('urlencoded', { limit: 1024 * 100 }); // 100 KB
+// app.enableLayer('jwt', { secret: 'super-secret-key' });
 
 
 app.use((req, res, next) => {

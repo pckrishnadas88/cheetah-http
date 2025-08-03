@@ -1,5 +1,5 @@
 {
-  "name": "cheetah",
+  "name": "cheetah-http",
   "version": "1.0.0",
   "main": "cheetah.js",
   "description": "Ultra-fast, minimal HTTP server for Node.js",
