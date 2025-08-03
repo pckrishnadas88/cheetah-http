@@ -1,13 +1,9 @@
 {
-  "name": "server-test-app",
+  "name": "cheetah",
   "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "main": "cheetah.js",
+  "description": "Ultra-fast, minimal HTTP server for Node.js",
+  "keywords": ["http", "server", "node", "framework", "fast", "cheetah"],
+  "author": "Krishnadas P.C",
+  "license": "MIT"
 }

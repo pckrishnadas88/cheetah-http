@@ -96,18 +96,29 @@ class CheetahServer {
   }
 
   _startWorker() {
-    const server = http.createServer((req, res) => this.handle(req, res));
-    server.listen(this.port, () => {
-      if (this.onListen) this.onListen();
-      console.log(`Worker ${process.pid} listening on port ${this.port}`);
-    });
-  }
+  const server = http.createServer((req, res) => {
+    // Patch res with .json()
+    res.json = function (data) {
+      const body = JSON.stringify(data);
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Length', Buffer.byteLength(body));
+      res.end(body);
+    };
+
+    // ✅ Fix: preserve outer this context
+    this.handle(req, res);
+  });
+
+  server.listen(this.port, () => {
+    if (this.onListen) this.onListen();
+    console.log(`Worker ${process.pid} listening on port ${this.port}`);
+  });
+}
 
   listen(port, options = {}, cb) {
     this.port = port;
     this.options = options;
     this.onListen = cb;
-
     const enableCluster = options.cluster === true;
 
     if (enableCluster && cluster.isPrimary) {
@@ -122,4 +133,5 @@ class CheetahServer {
   }
 }
 
-module.exports = () => new CheetahServer();
+module.exports.CheetahServer = CheetahServer;
+
