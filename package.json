@@ -3,7 +3,23 @@
   "version": "1.0.0",
   "main": "cheetah.js",
   "description": "Ultra-fast, minimal HTTP server for Node.js",
-  "keywords": ["http", "server", "node", "framework", "fast", "cheetah"],
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/example/app.js"
+  },
+  "keywords": [
+    "http",
+    "server",
+    "node",
+    "framework",
+    "fast",
+    "cheetah"
+  ],
   "author": "Krishnadas P.C",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.2.0",
+    "typescript": "^5.9.2"
+  }
 }
